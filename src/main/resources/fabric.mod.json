@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "volcanobay",
+  "version": "${version}",
+  "name": "volcanobay",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/modog/volcanobay"
+  },
+  "license": "MIT",
+  "icon": "assets/volcanobay/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "org.modogthedev.volcanobay.client.VolcanobayClient"
+    ],
+    "main": [
+      "org.modogthedev.volcanobay.Volcanobay"
+    ]
+  },
+  "mixins": [
+    "volcanobay.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
