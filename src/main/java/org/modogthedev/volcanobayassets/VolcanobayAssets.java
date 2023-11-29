@@ -15,6 +15,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.modogthedev.volcanobayassets.client.StealthHudOverlay;
+import org.modogthedev.volcanobayassets.core.event.PlayerTickHandler;
 import org.modogthedev.volcanobayassets.core.networking.ModMessages;
 import org.slf4j.Logger;
 
@@ -24,7 +26,7 @@ public class VolcanobayAssets {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "volcanobayassets";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     // Create a Deferred Register to hold Blocks which will all be registered under the "volcanobayassets" namespace
 
     public VolcanobayAssets() {
@@ -38,24 +40,20 @@ public class VolcanobayAssets {
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        setup();
     }
-
+    public void setup() {
+        IEventBus bus = MinecraftForge.EVENT_BUS;
+        bus.addListener(PlayerTickHandler::playerTickHandler);
+    }
     private void commonSetup(final FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
-        LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
-
-        if (Config.logDirtBlock)
-            LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
-
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
-
-        ModMessages.register();
+        event.enqueueWork(() -> {
+            ModMessages.register();
+        });
     }
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -65,9 +63,6 @@ public class VolcanobayAssets {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-            // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
     }
 }
