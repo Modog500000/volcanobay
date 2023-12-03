@@ -7,6 +7,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
+import org.modogthedev.volcanobayassets.client.ClientStealthData;
+import org.modogthedev.volcanobayassets.client.StealthHudOverlay;
 import org.modogthedev.volcanobayassets.core.networking.ModMessages;
 import org.modogthedev.volcanobayassets.core.networking.packet.StealthSyncDataS2CPacket;
 import org.modogthedev.volcanobayassets.core.util.PlayerStealthProvider;
@@ -40,7 +42,7 @@ public class PlayerTickHandler {
                 }
             }
             if (still) {
-                if(new Random().nextFloat() <= 0.1f) {
+                if(new Random().nextFloat() <= 0.05f) {
                     addStealth(player,10);
                 }
             }
@@ -60,17 +62,19 @@ public class PlayerTickHandler {
 
     public static void addStealth(ServerPlayer player, int amount) {
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
-            stealthData.addStealth(amount);
-            player.sendSystemMessage(Component.literal("Current Stealth " + stealthData.getStealth())
-                    .withStyle(ChatFormatting.AQUA));
+                    stealthData.addStealth(amount); {
+                    if (StealthHudOverlay.decrease > 0 && ClientStealthData.getPlayerStealth() < 100)
+                        StealthHudOverlay.increase = 100;
+                    StealthHudOverlay.decrease = 0;
+                }
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
         });
     }
     public static void subStealth(ServerPlayer player, int amount) {
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
             stealthData.subStealth(amount);
-            player.sendSystemMessage(Component.literal("Current Stealth " + stealthData.getStealth())
-                    .withStyle(ChatFormatting.AQUA));
+            StealthHudOverlay.decrease = 100;
+            StealthHudOverlay.increase = 0;
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
         });
     }

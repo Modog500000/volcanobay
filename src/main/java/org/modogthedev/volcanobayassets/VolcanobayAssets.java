@@ -16,6 +16,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.modogthedev.volcanobayassets.client.StealthHudOverlay;
+import org.modogthedev.volcanobayassets.core.ModCreativeModeTab;
+import org.modogthedev.volcanobayassets.core.ModEntities;
+import org.modogthedev.volcanobayassets.core.ModItems;
 import org.modogthedev.volcanobayassets.core.event.PlayerTickHandler;
 import org.modogthedev.volcanobayassets.core.networking.ModMessages;
 import org.slf4j.Logger;
@@ -34,7 +37,9 @@ public class VolcanobayAssets {
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
-
+        ModEntities.ENTITIES.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
+        ModCreativeModeTab.CREATIVE_MODE_TABS.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
