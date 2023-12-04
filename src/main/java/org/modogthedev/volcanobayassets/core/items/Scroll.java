@@ -3,6 +3,7 @@ package org.modogthedev.volcanobayassets.core.items;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -11,8 +12,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import org.modogthedev.volcanobayassets.VolcanobayAssets;
 import org.modogthedev.volcanobayassets.core.ModEntities;
 import org.modogthedev.volcanobayassets.core.entities.SpellEntity;
+import org.modogthedev.volcanobayassets.core.event.PlayerTickHandler;
 
 public class Scroll extends Item {
     private static final EntityDataAccessor<String> DATA_SPELL_TYPE = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.STRING);
@@ -25,12 +28,15 @@ public class Scroll extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand p_41434_) {
-        if (Dist.CLIENT.isDedicatedServer()) {
-
+        if (!level.isClientSide()) {
+            PlayerTickHandler.subStealth((ServerPlayer) player,50);
         }
         SpellEntity spellEntity = ModEntities.SPELL_ENTITY.get().create(level);
         spellEntity.setPos(player.position());
+        spellEntity.setXRot(player.getXRot());
+        spellEntity.setYRot(player.getYHeadRot());
         spellEntity.setSpellType(type);
+        spellEntity.setOwner(player);
         spellEntity.checkDataDiffers();
         level.addFreshEntity(spellEntity);
         return super.use(level, player, p_41434_);

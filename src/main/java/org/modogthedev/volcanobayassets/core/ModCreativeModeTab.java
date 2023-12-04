@@ -19,6 +19,8 @@ public class ModCreativeModeTab {
                     .displayItems((pParameters, pOutput) -> {
                         pOutput.accept(ModItems.SCROLL_HEAL.get().getDefaultInstance());
                         pOutput.accept(ModItems.SCROLL_BASIC.get().getDefaultInstance());
+                        pOutput.accept(ModItems.SCROLL_MISSILE.get().getDefaultInstance());
+                        pOutput.accept(ModItems.SCROLL_STRENGTHEN.get().getDefaultInstance());
                     })
                     .build());
 }
