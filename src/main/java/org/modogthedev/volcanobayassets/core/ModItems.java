@@ -17,4 +17,5 @@ public class ModItems {
     public static final RegistryObject<Scroll> SCROLL_BASIC = ITEMS.register("scroll_basic", () -> new Scroll(new Scroll.Properties().spellType(2),new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Scroll> SCROLL_MISSILE = ITEMS.register("scroll_missile", () -> new Scroll(new Scroll.Properties().spellType(3),new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Scroll> SCROLL_STRENGTHEN = ITEMS.register("scroll_strengthen", () -> new Scroll(new Scroll.Properties().spellType(4),new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Scroll> SCROLL_FIRWORK = ITEMS.register("scroll_firework", () -> new Scroll(new Scroll.Properties().spellType(5),new Item.Properties().stacksTo(1)));
 }

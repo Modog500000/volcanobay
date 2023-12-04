@@ -16,10 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
-import org.modogthedev.volcanobayassets.spells.BasicSpell;
-import org.modogthedev.volcanobayassets.spells.HealSpell;
-import org.modogthedev.volcanobayassets.spells.MissileSpell;
-import org.modogthedev.volcanobayassets.spells.StrengthenSpell;
+import org.modogthedev.volcanobayassets.spells.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,10 +109,18 @@ public class SpellEntity extends Entity {
                     this.kill();
                 }
             }
+            case 5 -> {
+                FireworkSpell.tick(initialise,this, lifetime, owner);
+                if (lifetime > 150) {
+                    this.kill();
+                }
+                initialise = true;
+            }
         }
         if (projectile) {
             if (!initialise) {
                 shootFromRotation(this.getXRot(),this.getYRot(),0.0F, (float) (1.5+Math.random()-.5), 1.0F);
+                this.setPos(this.position().add(0,1.75,0));
                 initialise = true;
 
             }
