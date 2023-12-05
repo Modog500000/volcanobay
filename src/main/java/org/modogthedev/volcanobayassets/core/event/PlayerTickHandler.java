@@ -1,14 +1,9 @@
 package org.modogthedev.volcanobayassets.core.event;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
-import org.modogthedev.volcanobayassets.VolcanobayAssets;
-import org.modogthedev.volcanobayassets.client.ClientStealthData;
-import org.modogthedev.volcanobayassets.client.StealthHudOverlay;
 import org.modogthedev.volcanobayassets.core.networking.ModMessages;
 import org.modogthedev.volcanobayassets.core.networking.packet.StealthSyncDataS2CPacket;
 import org.modogthedev.volcanobayassets.core.util.PlayerStealthProvider;
@@ -16,7 +11,6 @@ import org.modogthedev.volcanobayassets.core.util.PlayerStealthProvider;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
-import java.util.function.BooleanSupplier;
 
 public class PlayerTickHandler {
     static ArrayList<Vec3> pos = new ArrayList<Vec3>();
@@ -62,19 +56,13 @@ public class PlayerTickHandler {
 
     public static void addStealth(ServerPlayer player, int amount) {
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
-                    stealthData.addStealth(amount); {
-                    if (StealthHudOverlay.decrease > 0 && ClientStealthData.getPlayerStealth() < 100)
-                        StealthHudOverlay.increase = 100;
-                    StealthHudOverlay.decrease = 0;
-                }
+                    stealthData.addStealth(amount);
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
         });
     }
     public static void subStealth(ServerPlayer player, int amount) {
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
             stealthData.subStealth(amount);
-            StealthHudOverlay.decrease = 100;
-            StealthHudOverlay.increase = 0;
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
         });
     }

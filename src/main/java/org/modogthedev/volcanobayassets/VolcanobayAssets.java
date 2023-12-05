@@ -1,8 +1,6 @@
 package org.modogthedev.volcanobayassets;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -14,13 +12,12 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.modogthedev.volcanobayassets.client.StealthHudOverlay;
 import org.modogthedev.volcanobayassets.core.ModCreativeModeTab;
 import org.modogthedev.volcanobayassets.core.ModEntities;
 import org.modogthedev.volcanobayassets.core.ModItems;
 import org.modogthedev.volcanobayassets.core.event.PlayerTickHandler;
 import org.modogthedev.volcanobayassets.core.networking.ModMessages;
+import org.modogthedev.volcanobayassets.VolcanobayConfig;
 import org.slf4j.Logger;
 
 @Mod(VolcanobayAssets.MODID)
@@ -44,7 +41,7 @@ public class VolcanobayAssets {
         MinecraftForge.EVENT_BUS.register(this);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, VolcanobayConfig.SPEC);
         setup();
     }
     public void setup() {

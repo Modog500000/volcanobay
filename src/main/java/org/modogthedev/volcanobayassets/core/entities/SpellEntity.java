@@ -15,7 +15,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.modogthedev.volcanobayassets.VolcanobayAssets;
+import org.modogthedev.volcanobayassets.core.ModEntities;
 import org.modogthedev.volcanobayassets.spells.*;
 
 import java.util.ArrayList;
@@ -87,15 +87,15 @@ public class SpellEntity extends Entity {
                 initialise = true;
             }
             case 2 -> {
-                BasicSpell.tick(initialise, this);
-                if (lifetime > 60) {
+                BasicSpell.tick(initialise, this, owner, 1); // Baisc
+                if (lifetime > 2) {
                     this.kill();
                 }
                 initialise = true;
             }
             case 3 -> {
                 if (MissileSpell.tick(initialise, this,owner)) {
-                    this.setDeltaMovement(this.getDeltaMovement().scale(0.8));
+                    this.setDeltaMovement(this.getDeltaMovement().scale(0.6));
                 }
                 projectile = true;
                 if (restorableLifetime > 60) {
@@ -116,15 +116,36 @@ public class SpellEntity extends Entity {
                 }
                 initialise = true;
             }
+            case 6 -> {
+                BasicSpell.tick(initialise, this, owner, 0); // Block
+                if (lifetime > 2) {
+                    this.kill();
+                }
+                initialise = true;
+            }
+            case 7 -> {
+                BombSpell.tick(initialise, this,owner);
+                projectile = true;
+                if (restorableLifetime > 100) {
+                    this.kill();
+                }
+            }
+            case 8 -> {
+                BasicSpell.tick(initialise, this, this, 2); // Special 1 (bomb)
+                if (lifetime > 5) {
+                    this.kill();
+                }
+                initialise = true;
+            }
         }
         if (projectile) {
             if (!initialise) {
-                shootFromRotation(this.getXRot(),this.getYRot(),0.0F, (float) (1.5+Math.random()-.5), 1.0F);
+                shootFromRotation(this.getXRot(), this.getYRot(), (float) ((Math.random()-.5)/1), (float) (2.5 + Math.random() - .5), 1.0F);
                 this.setPos(this.position().add(0,1.75,0));
                 initialise = true;
 
             }
-            this.setDeltaMovement(this.getDeltaMovement().x,this.getDeltaMovement().y-0.01,this.getDeltaMovement().z);
+                this.setDeltaMovement(this.getDeltaMovement().x,this.getDeltaMovement().y-0.01,this.getDeltaMovement().z);
             if (this.getDeltaMovement().equals(Vec3.ZERO)) {
                 this.kill();
             }
@@ -137,8 +158,8 @@ public class SpellEntity extends Entity {
         lifetime++;
         restorableLifetime++;
 
-        this.setDeltaMovement(this.getDeltaMovement().scale(0.999));
         this.move(MoverType.SELF,this.getDeltaMovement());
+        this.setDeltaMovement(this.getDeltaMovement().scale(0.999));
     }
 
     @Override
@@ -214,5 +235,19 @@ public class SpellEntity extends Entity {
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float)Math.PI / 180F));
         float f2 = Mth.cos(p_37254_ * ((float)Math.PI / 180F)) * Mth.cos(p_37253_ * ((float)Math.PI / 180F));
         this.shoot((double)f, (double)f1, (double)f2, p_37256_, p_37257_);
+    }
+    public static void newBasic(Vec3 pos, Level level, Entity entity, int special) {
+        SpellEntity spellEntity = ModEntities.SPELL_ENTITY.get().create(level);
+        spellEntity.setPos(pos);
+        spellEntity.setOwner(entity);
+        if (special == 0) {
+            spellEntity.setSpellType(2);
+        } else if (special ==1) {
+            spellEntity.setSpellType(6);
+        }else if (special ==2) {
+            spellEntity.setSpellType(8);
+        }
+        spellEntity.checkDataDiffers();
+        level.addFreshEntity(spellEntity);
     }
 }

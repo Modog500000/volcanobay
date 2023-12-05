@@ -4,25 +4,35 @@ import com.lowdragmc.photon.client.fx.EntityEffect;
 import com.lowdragmc.photon.client.fx.FX;
 import com.lowdragmc.photon.client.fx.FXHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.modogthedev.volcanobayassets.core.entities.SpellEntity;
 
 public class BasicSpell {
-    static final FX fx_basic = FXHelper.getFX(new ResourceLocation("volcanobayassets:basic"));
-    public static void tick(boolean initalised, Entity me) {
+    public static void tick(boolean initalised, Entity me, Entity owner, int special) {
+        final boolean client = me.level().isClientSide;
         Vec3 pos = me.position();
         Level level = me.level();
-        if (!initalised) {
-            var effect = new EntityEffect(fx_basic,level,me);
-            effect.setForcedDeath(false);
-            effect.setAllowMulti(true);
-            effect.start();
+        if (!initalised && client) {
+            final FX fx_basic = FXHelper.getFX(new ResourceLocation("volcanobayassets:basic"));
+            final FX fx_block = FXHelper.getFX(new ResourceLocation("volcanobayassets:block"));
+            final FX fx_explosion = FXHelper.getFX(new ResourceLocation("volcanobayassets:explosion"));
+            if (special == 0) {
+                var effect = new EntityEffect(fx_block,level,owner);
+                effect.setForcedDeath(false);
+                effect.setAllowMulti(true);
+                effect.start();
+            } else if (special == 1) {
+                var effect = new EntityEffect(fx_basic, level, owner);
+                effect.setForcedDeath(false);
+                effect.setAllowMulti(true);
+                effect.start();
+            } else if (special == 2) {
+                var effect = new EntityEffect(fx_explosion, level, owner);
+                effect.setForcedDeath(false);
+                effect.setAllowMulti(true);
+                effect.start();
+            }
         }
     }
 }

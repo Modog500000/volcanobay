@@ -21,6 +21,8 @@ public class ModCreativeModeTab {
                         pOutput.accept(ModItems.SCROLL_BASIC.get().getDefaultInstance());
                         pOutput.accept(ModItems.SCROLL_MISSILE.get().getDefaultInstance());
                         pOutput.accept(ModItems.SCROLL_STRENGTHEN.get().getDefaultInstance());
+                        pOutput.accept(ModItems.SCROLL_FIRWORK.get().getDefaultInstance());
+                        pOutput.accept(ModItems.SCROLL_BOMB.get().getDefaultInstance());
                     })
                     .build());
 }
