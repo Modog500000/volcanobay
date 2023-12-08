@@ -1,6 +1,11 @@
 {
   "itemgroup.volcanobay" : "Volcanobay Assets",
 
-  "item.volcanobay.key" : "Key",
+  "item.volcanobayassets.scroll_basic" : "Basic Spell Scroll",
+  "item.volcanobayassets.scroll_missile" : "Missile Spell Scroll",
+  "item.volcanobayassets.scroll_bomb" : "Bomb Spell Scroll",
+  "item.volcanobayassets.scroll_firework" : "Firework Spell Scroll",
+  "item.volcanobayassets.scroll_heal" : "Heal Spell Scroll",
+  "item.volcanobayassets.scroll_strengthen" : "Strengthen Spell Scroll",
   "block.volcanobay.sandstone_bricks_varient" : "Sandstone Brick Varient"
 }

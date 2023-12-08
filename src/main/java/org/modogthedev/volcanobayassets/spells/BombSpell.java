@@ -32,11 +32,23 @@ public class BombSpell {
                 SpellEntity.newBasic(me.position(), me.level(), me, 2);
                 for (LivingEntity entity : SpellEntity.getListofEntitesInRange(5, pos, me)) {
                     if (entity != owner) {
-                        entity.hurt(owner.damageSources().magic(), 10);
+                        entity.hurt(owner.damageSources().magic(), 5+me.power);
                         SpellEntity.newBasic(entity.position(), me.level(), entity, 1);
                     }
                 }
                 me.markForRemoval = 0;
+            }
+            for (SpellEntity entity : SpellEntity.getListofSpellsInRange(2, pos, me)) {
+                if (entity != me) {
+                    if (entity.type == 3) {
+                        SpellEntity.newBasic(me.position(), me.level(), me, 2);
+                        for (LivingEntity entity2 : SpellEntity.getListofEntitesInRange(5, pos, me)) {
+                            entity2.hurt(owner.damageSources().magic(), 5+(me.power*2));
+                            SpellEntity.newBasic(entity2.position(), me.level(), entity, 1);
+                        }
+                        me.markForRemoval = 0;
+                    }
+                }
             }
         }
     }

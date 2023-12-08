@@ -21,7 +21,7 @@ public class StrengthenSpell {
             effect.start();
         }
         if (me.markForRemoval < 0) {
-            for (SpellEntity entity : SpellEntity.getListofSpellsInRange(20, pos, me)) {
+            for (SpellEntity entity : SpellEntity.getListofSpellsInRange(5, pos, me)) {
                 if (entity != me) {
                     if (entity.type != 4) {
                         me.setPos(entity.position());

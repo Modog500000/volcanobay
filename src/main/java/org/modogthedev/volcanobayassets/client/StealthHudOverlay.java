@@ -25,6 +25,8 @@ public class StealthHudOverlay{
             "textures/stealth/decrease.png");
     private static final ResourceLocation HEAL = new ResourceLocation(VolcanobayAssets.MODID,
             "textures/particle/heal.png");
+    private static final ResourceLocation CROSS = new ResourceLocation(VolcanobayAssets.MODID,
+            "textures/particle/cross.png");
     private static final ResourceLocation TRAIL = new ResourceLocation(VolcanobayAssets.MODID,
             "textures/particle/trail.png");
     private static final ResourceLocation EMPTY = new ResourceLocation(VolcanobayAssets.MODID,
@@ -61,9 +63,8 @@ public class StealthHudOverlay{
         guiGraphics.drawCenteredString(gui.getFont(),String.valueOf(ClientStealthData.getPlayerStealth()),x-16,y-40,0);
         Player player = Minecraft.getInstance().player;
         Math.floor(player.getVisualRotationYInDegrees()/270);
-        guiGraphics.blit(COMPASS,x-(width/2)-180,11,0,0,360,20,
-                32,32);
-        guiGraphics.drawCenteredString(gui.getFont(), "|", (int) (x-(width/2)),32,0xffffff);
+        guiGraphics.blit(COMPASS,x-(width/2)-185,13,0,0,364,14,
+                364,14);
         guiGraphics.drawCenteredString(gui.getFont(),"S", (int) (x-(width/2)+player.getVisualRotationYInDegrees()-180+Math.floor((player.getVisualRotationYInDegrees()-180)/360)*-360)-180,16,0xffffff);
         guiGraphics.drawCenteredString(gui.getFont(),"W", (int) (x-(width/2)+player.getVisualRotationYInDegrees()-270+Math.floor((player.getVisualRotationYInDegrees()-270)/360)*-360)-180,16,0xffffff);
         guiGraphics.drawCenteredString(gui.getFont(),"E", (int) (x-(width/2)+player.getVisualRotationYInDegrees()-90+Math.floor((player.getVisualRotationYInDegrees()-90)/360)*-360)-180,16,0xffffff);

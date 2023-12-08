@@ -15,6 +15,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.modogthedev.volcanobayassets.VolcanobayAssets;
 import org.modogthedev.volcanobayassets.core.ModEntities;
 import org.modogthedev.volcanobayassets.spells.*;
 
@@ -84,6 +85,7 @@ public class SpellEntity extends Entity {
                 if (restorableLifetime > 400) {
                     this.kill();
                 }
+                this.setDeltaMovement(this.getDeltaMovement().add(0,-1,0));
                 initialise = true;
             }
             case 2 -> {
@@ -105,7 +107,7 @@ public class SpellEntity extends Entity {
             case 4 -> {
                 StrengthenSpell.tick(initialise,this);
                 projectile = true;
-                if (lifetime > 60) {
+                if (lifetime > 100) {
                     this.kill();
                 }
             }
@@ -249,5 +251,32 @@ public class SpellEntity extends Entity {
         }
         spellEntity.checkDataDiffers();
         level.addFreshEntity(spellEntity);
+    }
+    public static int returnCooldown(int type) {
+        switch (type) {
+            case 0 -> {
+                return 0;
+            }
+            case 1 -> {
+                return 520;
+            }
+            case 2 -> {
+                return 40;
+            }
+            case 3 -> {
+                return 40;
+            }
+            case 4 -> {
+                return 120;
+            }
+            case 6 -> {
+                return 600;
+            }
+            case 7 -> {
+                return 100;
+            }
+        }
+        VolcanobayAssets.LOGGER.warn("Scroll Type Cooldown not registered!(" + type + ") Cooldown set to 0");
+        return 0;
     }
 }

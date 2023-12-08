@@ -24,7 +24,7 @@ public class Scroll extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand p_41434_) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
             PlayerTickHandler.subStealth((ServerPlayer) player,50);
         }
@@ -36,7 +36,8 @@ public class Scroll extends Item {
         spellEntity.setOwner(player);
         spellEntity.checkDataDiffers();
         level.addFreshEntity(spellEntity);
-        return super.use(level, player, p_41434_);
+        player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(),SpellEntity.returnCooldown(type));
+        return super.use(level, player, hand);
     }
 
     public static class Properties {
