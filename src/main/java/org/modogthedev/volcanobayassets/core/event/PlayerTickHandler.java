@@ -4,6 +4,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
+import org.modogthedev.volcanobayassets.core.ModAttributes;
 import org.modogthedev.volcanobayassets.core.networking.ModMessages;
 import org.modogthedev.volcanobayassets.core.networking.packet.StealthSyncDataS2CPacket;
 import org.modogthedev.volcanobayassets.core.util.PlayerStealthProvider;
@@ -21,6 +22,7 @@ public class PlayerTickHandler {
         tickSinceSet++;
         MinecraftServer server = event.getServer();
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            int thisStealth = (int) player.getAttribute(ModAttributes.stealth.get()).getValue();
             if (!players.contains(player.getUUID())) {
                 players.add(player.getUUID());
                 pos.add(player.position());
@@ -32,21 +34,21 @@ public class PlayerTickHandler {
             }
             if (player.isCrouching()) {
                 if(new Random().nextFloat() <= 0.01f) {
-                    addStealth(player,10);
+                    addStealth(player,10, thisStealth);
                 }
             }
             if (still) {
                 if(new Random().nextFloat() <= 0.05f) {
-                    addStealth(player,10);
+                    addStealth(player,10, thisStealth);
                 }
             }
             if (player.isSprinting() && !player.isCrouching()) {
                 if(new Random().nextFloat() <= 0.05f) {
-                    subStealth(player,10);
+                    subStealth(player,10,thisStealth);
                 }
             }
             if(new Random().nextFloat() <= 0.005f) {;
-                addStealth(player,2);
+                addStealth(player,2, thisStealth);
             }
         }
         if (tickSinceSet > 20) {
@@ -54,15 +56,19 @@ public class PlayerTickHandler {
         }
     }
 
-    public static void addStealth(ServerPlayer player, int amount) {
+    public static void addStealth(ServerPlayer player, int amount, int stealth) {
+        if (stealth <= 4) { stealth = 4; }
+        int finalStealth = stealth;
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
-                    stealthData.addStealth(amount);
+                    stealthData.addStealth(amount*(finalStealth/4));
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
         });
     }
-    public static void subStealth(ServerPlayer player, int amount) {
+    public static void subStealth(ServerPlayer player, int amount, int stealth) {
+        if (stealth <= 4) { stealth = 4; }
+        int finalStealth = stealth;
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
-            stealthData.subStealth(amount);
+            stealthData.subStealth(amount/(finalStealth/4));
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
         });
     }

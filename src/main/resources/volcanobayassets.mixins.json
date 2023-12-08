@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "volcanobayassets.refmap.json",
   "mixins": [
+    "LivingEntityMixin"
   ],
   "client": [
   ],

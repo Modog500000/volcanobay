@@ -12,6 +12,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.modogthedev.volcanobayassets.core.ModAttributes;
 import org.modogthedev.volcanobayassets.core.ModCreativeModeTab;
 import org.modogthedev.volcanobayassets.core.ModEntities;
 import org.modogthedev.volcanobayassets.core.ModItems;
@@ -37,6 +38,7 @@ public class VolcanobayAssets {
         ModEntities.ENTITIES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModCreativeModeTab.CREATIVE_MODE_TABS.register(modEventBus);
+        ModAttributes.ATTRIBUTES.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 

@@ -7,5 +7,5 @@
   "item.volcanobayassets.scroll_firework" : "Firework Spell Scroll",
   "item.volcanobayassets.scroll_heal" : "Heal Spell Scroll",
   "item.volcanobayassets.scroll_strengthen" : "Strengthen Spell Scroll",
-  "block.volcanobay.sandstone_bricks_varient" : "Sandstone Brick Varient"
+  "volcanobayassets.attribute.magic_damage.name" : "Magic Damage"
 }

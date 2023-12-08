@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.modogthedev.volcanobayassets.core.ModAttributes;
 import org.modogthedev.volcanobayassets.core.ModEntities;
 import org.modogthedev.volcanobayassets.core.entities.SpellEntity;
 import org.modogthedev.volcanobayassets.core.event.PlayerTickHandler;
@@ -26,7 +27,7 @@ public class Scroll extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
-            PlayerTickHandler.subStealth((ServerPlayer) player,50);
+            PlayerTickHandler.subStealth((ServerPlayer) player,50, (int) player.getAttribute(ModAttributes.stealth.get()).getValue());
         }
         SpellEntity spellEntity = ModEntities.SPELL_ENTITY.get().create(level);
         spellEntity.setPos(player.position());
@@ -34,6 +35,7 @@ public class Scroll extends Item {
         spellEntity.setYRot(player.getYHeadRot());
         spellEntity.setSpellType(type);
         spellEntity.setOwner(player);
+        spellEntity.power = (int) player.getAttribute(ModAttributes.magicDamage.get()).getValue();
         spellEntity.checkDataDiffers();
         level.addFreshEntity(spellEntity);
         player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(),SpellEntity.returnCooldown(type));
