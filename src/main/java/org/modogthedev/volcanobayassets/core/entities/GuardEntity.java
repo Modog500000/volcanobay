@@ -1,5 +1,11 @@
 package org.modogthedev.volcanobayassets.core.entities;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -7,9 +13,19 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import org.jetbrains.annotations.Nullable;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
+import org.modogthedev.volcanobayassets.core.ModAttributes;
+import org.modogthedev.volcanobayassets.core.event.PlayerTickHandler;
+
+import java.util.List;
 
 public class GuardEntity extends Monster {
 
@@ -20,9 +36,9 @@ public class GuardEntity extends Monster {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this,1));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1, false));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 6));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1, false));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this,1));
+        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
         super.registerGoals();
     }
     public static AttributeSupplier.Builder createAttributes() {
@@ -31,7 +47,60 @@ public class GuardEntity extends Monster {
 
     @Override
     public boolean hurt(DamageSource source, float p_21017_) {
-        this.setTarget((LivingEntity) source.getEntity());
+        newTarget((LivingEntity) source.getEntity(), this);
+        warnOthers((LivingEntity) source.getEntity(),10);
         return super.hurt(source, p_21017_);
     }
+
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_, MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
+        this.setCanPickUpLoot(true);
+        this.setItemSlot(EquipmentSlot.HEAD, Items.IRON_HELMET.getDefaultInstance());
+        this.setItemSlot(EquipmentSlot.CHEST, Items.IRON_CHESTPLATE.getDefaultInstance());
+        this.setItemSlot(EquipmentSlot.LEGS, Items.IRON_LEGGINGS.getDefaultInstance());
+        this.setItemSlot(EquipmentSlot.FEET, Items.IRON_BOOTS.getDefaultInstance());
+        this.setItemSlot(EquipmentSlot.MAINHAND, Items.IRON_SWORD.getDefaultInstance());
+
+        return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
+    }
+
+    @Override
+    public void tick() {
+        if (!this.level().isClientSide) {
+                List<ServerPlayer> getPlayers = this.level().getEntitiesOfClass(ServerPlayer.class, this.getBoundingBox().inflate(10));
+            for (ServerPlayer player : getPlayers) {
+                int stealth = (int) player.getAttribute(ModAttributes.stealth.get()).getValue();
+                Vec3 vec3 = this.getViewVector(1.0F).normalize();
+                Vec3 vec31 = new Vec3(player.getX() - this.getX(), player.getEyeY() - this.getEyeY(), player.getZ() - this.getZ());
+                double d0 = vec31.length();
+                vec31 = vec31.normalize();
+                double d1 = vec3.dot(vec31);
+                boolean seen =d1 > Math.max(0.985,(stealth/50)-1) && this.hasLineOfSight(player);
+                if (seen) {
+                    if (player.getMainHandItem().getItem() instanceof SwordItem) {
+                        newTarget(player, this);
+                        warnOthers(player,5);
+                    }
+                    PlayerTickHandler.subStealth(player, 100);
+                }
+            }
+        }
+        super.tick();
+    }
+    public void newTarget(LivingEntity target, GuardEntity guard) {
+        if (guard.getTarget() == null) {
+            guard.setTarget(target);
+        }
+    }
+    public void warnOthers(LivingEntity target, int radius) {
+        List<GuardEntity> getGuards = this.level().getEntitiesOfClass(GuardEntity.class, this.getBoundingBox().inflate(radius));
+        for (GuardEntity guard : getGuards) {
+            if (guard.hasLineOfSight(this)) {
+                newTarget(target, guard);
+            }
+        }
+    }
+
+
 }

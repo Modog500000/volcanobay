@@ -26,6 +26,10 @@ public class ModCreativeModeTab {
                         pOutput.accept(ModItems.SCROLL_PILLAR_ICE.get().getDefaultInstance());
 
                         pOutput.accept(ModItems.GUARD_SPAWN_EGG.get().getDefaultInstance());
+
+                        pOutput.accept(ModItems.COIN_COPPER.get().getDefaultInstance());
+                        pOutput.accept(ModItems.COIN_SILVER.get().getDefaultInstance());
+                        pOutput.accept(ModItems.COIN_GOLD.get().getDefaultInstance());
                     })
                     .build());
 }

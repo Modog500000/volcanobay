@@ -46,21 +46,20 @@ public class StealthHudOverlay{
         int x = width;
         int y = height;
         if (ClientStealthData.getPlayerStealth() > 50) {
-            guiGraphics.blit(UNSEEN,x-34,y-34,0,0,32,32,
+            guiGraphics.blit(UNSEEN,x-34,14,0,0,32,32,
                     32,32);
         } else {
-            guiGraphics.blit(SEEN, x - 34, y - 34, 0, 0, 32, 32,
+            guiGraphics.blit(SEEN, x - 34, 14, 0, 0, 32, 32,
                     32, 32);
         }
         if (increase > 0) {
             increase--;
-            guiGraphics.blit(INCREASE,x-36,y-34+dir*2,0,0,16,16,16,16);
+            guiGraphics.blit(INCREASE,x-16,34+dir*2,0,0,16,16,16,16);
         }
         if (decrease > 0) {
             decrease--;
-            guiGraphics.blit(DECREASE,x-36,y-34+dir*2,0,0,16,16,16,16);
+            guiGraphics.blit(DECREASE,x-16,34+dir*2,0,0,16,16,16,16);
         }
-        guiGraphics.drawCenteredString(gui.getFont(),String.valueOf(ClientStealthData.getPlayerStealth()),x-16,y-40,0);
         Player player = Minecraft.getInstance().player;
         Math.floor(player.getVisualRotationYInDegrees()/270);
         guiGraphics.blit(COMPASS,x-(width/2)-185,13,0,0,364,14,

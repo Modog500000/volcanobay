@@ -61,3 +61,15 @@ description='''${mod_description}'''
    versionRange="${minecraft_version_range}"
    ordering="NONE"
    side="BOTH"
+[[dependencies.${mod_id}]]
+modId="ldlib"
+mandatory=true
+versionRange="[1.0.21.d,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.${mod_id}]]
+modId="magistuarmory"
+mandatory=true
+versionRange="[8.11,)"
+ordering="NONE"
+side="BOTH"

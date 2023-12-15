@@ -27,7 +27,7 @@ public class Scroll extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
-            PlayerTickHandler.subStealth((ServerPlayer) player,50, (int) player.getAttribute(ModAttributes.stealth.get()).getValue());
+            PlayerTickHandler.subStealth((ServerPlayer) player,50);
         }
         SpellEntity spellEntity = ModEntities.SPELL_ENTITY.get().create(level);
         spellEntity.setPos(player.position());

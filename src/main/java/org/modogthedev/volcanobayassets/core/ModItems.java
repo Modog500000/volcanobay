@@ -23,4 +23,7 @@ public class ModItems {
     public static final RegistryObject<Scroll> SCROLL_BOMB = ITEMS.register("scroll_bomb", () -> new Scroll(new Scroll.Properties().spellType(7),new Item.Properties().stacksTo(1).durability(10)));
     public static final RegistryObject<Scroll> SCROLL_PILLAR_ICE = ITEMS.register("scroll_pillar_ice", () -> new Scroll(new Scroll.Properties().spellType(9),new Item.Properties().stacksTo(1).durability(10)));
     public static final RegistryObject<ForgeSpawnEggItem> GUARD_SPAWN_EGG = ITEMS.register("guard_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.GUARD, 0x1cadc9,0xba8106, new Item.Properties()));
+    public static final RegistryObject<Item> COIN_COPPER = ITEMS.register("coin_copper", () -> new Item(new  Item.Properties()));
+    public static final RegistryObject<Item> COIN_SILVER = ITEMS.register("coin_silver", () -> new Item(new  Item.Properties()));
+    public static final RegistryObject<Item> COIN_GOLD = ITEMS.register("coin_gold", () -> new Item(new  Item.Properties()));
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": {
+        "min": -2,
+        "max": 2
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "volcanobayassets:coin_copper"
+        }
+      ]
+    }
+  ]
+}

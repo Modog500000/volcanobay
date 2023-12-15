@@ -34,21 +34,21 @@ public class PlayerTickHandler {
             }
             if (player.isCrouching()) {
                 if(new Random().nextFloat() <= 0.01f) {
-                    addStealth(player,10, thisStealth);
+                    addStealth(player,10);
                 }
             }
             if (still) {
                 if(new Random().nextFloat() <= 0.05f) {
-                    addStealth(player,10, thisStealth);
+                    addStealth(player,10);
                 }
             }
             if (player.isSprinting() && !player.isCrouching()) {
                 if(new Random().nextFloat() <= 0.05f) {
-                    subStealth(player,10,thisStealth);
+                    subStealth(player,10);
                 }
             }
             if(new Random().nextFloat() <= 0.005f) {;
-                addStealth(player,2, thisStealth);
+                addStealth(player,2);
             }
         }
         if (tickSinceSet > 20) {
@@ -56,17 +56,19 @@ public class PlayerTickHandler {
         }
     }
 
-    public static void addStealth(ServerPlayer player, int amount, int stealth) {
-        if (stealth <= 4) { stealth = 4; }
-        int finalStealth = stealth;
+    public static void addStealth(ServerPlayer player, int amount) {
+        int thisStealth = (int) player.getAttribute(ModAttributes.stealth.get()).getValue();
+        if (thisStealth <= 4) { thisStealth = 4; }
+        int finalStealth = thisStealth;
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
                     stealthData.addStealth(amount*(finalStealth/4));
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
         });
     }
-    public static void subStealth(ServerPlayer player, int amount, int stealth) {
-        if (stealth <= 4) { stealth = 4; }
-        int finalStealth = stealth;
+    public static void subStealth(ServerPlayer player, int amount) {
+        int thisStealth = (int) player.getAttribute(ModAttributes.stealth.get()).getValue();
+        if (thisStealth <= 4) { thisStealth = 4; }
+        int finalStealth = thisStealth;
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
             stealthData.subStealth(amount/(finalStealth/4));
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
