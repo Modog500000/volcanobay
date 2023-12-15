@@ -141,6 +141,7 @@ repositories {
     // }
     maven { url = 'https://maven.firstdarkdev.xyz/snapshots' }
     maven { url = 'https://maven.blamejared.com' }
+    maven { url = 'https://www.cursemaven.com' }
 }
 
 dependencies {
@@ -153,6 +154,9 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("com.lowdragmc.photon:photon-forge-1.20.1:${ldlib_version}") { transitive = false }
     implementation fg.deobf("com.lowdragmc.ldlib:ldlib-forge-1.20.1:${photon_version}") { transitive = false }
+
+    // Curse Maven Files
+    implementation fg.deobf("curse.maven:epic-fight-mod-405076:4922094")
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

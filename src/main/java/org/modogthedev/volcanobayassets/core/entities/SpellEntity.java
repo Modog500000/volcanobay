@@ -30,6 +30,7 @@ public class SpellEntity extends Entity {
     public int power = 1;
     public boolean projectile = false;
     public int markForRemoval = -1;
+    public boolean impact = false;
 
     public static final EntityDataAccessor<Integer> DATA_SPELL_TYPE = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.INT);
     private BlockPos source = this.blockPosition();
@@ -131,12 +132,25 @@ public class SpellEntity extends Entity {
                 if (restorableLifetime > 100) {
                     this.kill();
                 }
+                impact = true;
             }
             case 8 -> {
                 BasicSpell.tick(initialise, this, this, 2); // Special 1 (bomb)
                 if (lifetime > 5) {
                     this.kill();
                 }
+                initialise = true;
+            }
+            case 9 -> {
+                impact = true;
+                PillarIceSpell.tick(initialise,this,false, owner);
+                projectile = true;
+                if (lifetime > 100) {
+                    this.kill();
+                }
+            }
+            case 10 -> {
+                PillarIceSpell.tick(initialise,this,true, owner);
                 initialise = true;
             }
         }
@@ -159,8 +173,11 @@ public class SpellEntity extends Entity {
         }
         lifetime++;
         restorableLifetime++;
-
-        this.move(MoverType.SELF,this.getDeltaMovement());
+        if (impact) {
+            this.setPos(this.position().add(this.getDeltaMovement()));
+        } else {
+            this.move(MoverType.SELF, this.getDeltaMovement());
+        }
         this.setDeltaMovement(this.getDeltaMovement().scale(0.999));
     }
 
@@ -274,6 +291,9 @@ public class SpellEntity extends Entity {
             }
             case 7 -> {
                 return 100;
+            }
+            case 9 -> {
+                return 20;
             }
         }
         VolcanobayAssets.LOGGER.warn("Scroll Type Cooldown not registered!(" + type + ") Cooldown set to 0");

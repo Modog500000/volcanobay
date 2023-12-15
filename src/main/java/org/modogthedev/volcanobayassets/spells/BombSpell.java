@@ -28,7 +28,7 @@ public class BombSpell {
             effect.start();
         }
         if (me.markForRemoval == -1) {
-            if (level.getBlockState(new BlockPos((int) me.getX(), (int) (me.getY()-.1), (int) me.getZ())).getBlock() != Blocks.AIR) {
+            if (level.getBlockState(new BlockPos((int) me.getX(), (int) (me.getY()), (int) me.getZ())).getBlock() != Blocks.AIR) {
                 SpellEntity.newBasic(me.position(), me.level(), me, 2);
                 for (LivingEntity entity : SpellEntity.getListofEntitesInRange(5, pos, me)) {
                     if (entity != owner) {

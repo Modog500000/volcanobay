@@ -7,7 +7,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
 import org.modogthedev.volcanobayassets.client.StealthHudOverlay;
+import org.modogthedev.volcanobayassets.client.models.GuardEntityModel;
 import org.modogthedev.volcanobayassets.client.models.SpellEntityModel;
+import org.modogthedev.volcanobayassets.client.renderer.GuardRenderer;
 import org.modogthedev.volcanobayassets.client.renderer.SpellEntityRenderer;
 import org.modogthedev.volcanobayassets.core.ModEntities;
 
@@ -21,11 +23,13 @@ public class ClientEvents {
         @SubscribeEvent
         public static void entityRenders(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntities.SPELL_ENTITY.get(), SpellEntityRenderer::new);
+            event.registerEntityRenderer(ModEntities.GUARD.get(), GuardRenderer::new);
         }
 
         @SubscribeEvent
         public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(SpellEntityModel.LAYER_LOCATION, SpellEntityModel::createBodyLayer);
+            event.registerLayerDefinition(GuardEntityModel.LAYER_LOCATION, GuardEntityModel::createBodyLayer);
         }
     }
 }

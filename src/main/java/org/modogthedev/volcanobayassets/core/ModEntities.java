@@ -7,6 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
+import org.modogthedev.volcanobayassets.core.entities.GuardEntity;
 import org.modogthedev.volcanobayassets.core.entities.SpellEntity;
 
 public class ModEntities {
@@ -14,4 +15,6 @@ public class ModEntities {
 
     public static final RegistryObject<EntityType<SpellEntity>> SPELL_ENTITY = ENTITIES.register("spell_entity",
             () -> EntityType.Builder.of(SpellEntity::new, MobCategory.MISC).sized(0.5f,0.5f).build(new ResourceLocation(VolcanobayAssets.MODID, "spell_entity").toString()));
+    public static final RegistryObject<EntityType<GuardEntity>> GUARD = ENTITIES.register("guard",
+            () -> EntityType.Builder.of(GuardEntity::new, MobCategory.CREATURE).sized(0.5f,2.0f).build(new ResourceLocation(VolcanobayAssets.MODID, "guard").toString()));
 }

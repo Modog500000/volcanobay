@@ -37,7 +37,7 @@ public class MissileSpell {
             }
             for (LivingEntity entity : SpellEntity.getListofEntitesInRange(2, pos, me)) {
                 if (entity != owner) {
-                    entity.hurt(owner.damageSources().magic(), 3+(me.power*2));
+                    entity.hurt(owner.damageSources().magic(), 3+(me.power*4));
 
                     SpellEntity.newBasic(entity.position(),me.level(),entity,1);
                     me.markForRemoval = 1;

@@ -21,8 +21,11 @@ public class ModCreativeModeTab {
                         pOutput.accept(ModItems.SCROLL_BASIC.get().getDefaultInstance());
                         pOutput.accept(ModItems.SCROLL_MISSILE.get().getDefaultInstance());
                         pOutput.accept(ModItems.SCROLL_STRENGTHEN.get().getDefaultInstance());
-                        pOutput.accept(ModItems.SCROLL_FIRWORK.get().getDefaultInstance());
+                        pOutput.accept(ModItems.SCROLL_FIREWORK.get().getDefaultInstance());
                         pOutput.accept(ModItems.SCROLL_BOMB.get().getDefaultInstance());
+                        pOutput.accept(ModItems.SCROLL_PILLAR_ICE.get().getDefaultInstance());
+
+                        pOutput.accept(ModItems.GUARD_SPAWN_EGG.get().getDefaultInstance());
                     })
                     .build());
 }
