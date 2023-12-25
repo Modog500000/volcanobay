@@ -19,6 +19,8 @@ import org.modogthedev.volcanobayassets.core.ModItems;
 import org.modogthedev.volcanobayassets.core.event.PlayerTickHandler;
 import org.modogthedev.volcanobayassets.core.networking.ModMessages;
 import org.modogthedev.volcanobayassets.VolcanobayConfig;
+import org.modogthedev.volcanobayassets.core.sound.ClientMusicManager;
+import org.modogthedev.volcanobayassets.core.sound.ModSounds;
 import org.slf4j.Logger;
 
 @Mod(VolcanobayAssets.MODID)
@@ -39,6 +41,7 @@ public class VolcanobayAssets {
         ModItems.ITEMS.register(modEventBus);
         ModCreativeModeTab.CREATIVE_MODE_TABS.register(modEventBus);
         ModAttributes.ATTRIBUTES.register(modEventBus);
+        ModSounds.SOUND_EVENTS.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -49,6 +52,7 @@ public class VolcanobayAssets {
     public void setup() {
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(PlayerTickHandler::playerTickHandler);
+        bus.addListener(ClientMusicManager::clientMusicManager);
     }
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {

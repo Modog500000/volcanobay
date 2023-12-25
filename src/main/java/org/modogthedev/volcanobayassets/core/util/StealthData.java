@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public class StealthData {
     private int stealth;
-    private final int MIN_STEALTH = 0;
+    private final int MIN_STEALTH = -100;
     private final int MAX_STEALTH = 100;
 
     public int getStealth() {
@@ -14,6 +14,9 @@ public class StealthData {
 
     public void addStealth(int add) {
         this.stealth = Math.min(stealth + add, MAX_STEALTH);
+    }
+    public void setStealth(int set) {
+        this.stealth = set;
     }
 
     public void subStealth(int sub) {

@@ -10,5 +10,7 @@
 
   "item.volcanobayassets.guard_spawn_egg" : "Guard Spawn Egg",
   "entity.volcanobayassets.guard" : "Guard",
-  "volcanobayassets.attribute.magic_damage.name" : "Magic Damage"
+  "volcanobayassets.attribute.magic_damage.name" : "Magic Damage",
+
+  "sounds.volcanobayassets.music_invocation" : "Invocation - Name"
 }

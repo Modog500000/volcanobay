@@ -27,15 +27,6 @@ public class StealthSyncDataS2CPacket {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             // HERE WE ARE ON THE CLIENT!
-            if (stealth > ClientStealthData.getPlayerStealth()) {
-                if (StealthHudOverlay.decrease > 0 && stealth < 100) {
-                    StealthHudOverlay.increase = 100;
-                    StealthHudOverlay.decrease = 0;
-                }
-            } else if (stealth < ClientStealthData.getPlayerStealth()) {
-                StealthHudOverlay.decrease = 100;
-                StealthHudOverlay.increase = 0;
-            }
             ClientStealthData.set(stealth);
         });
         return true;

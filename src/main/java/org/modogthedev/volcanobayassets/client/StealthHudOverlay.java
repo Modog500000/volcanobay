@@ -1,12 +1,16 @@
 package org.modogthedev.volcanobayassets.client;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
+
+import java.awt.*;
 
 public class StealthHudOverlay{
     public static int increase = 0;
@@ -19,8 +23,8 @@ public class StealthHudOverlay{
             "textures/stealth/compass.png");
     private static final ResourceLocation UNSEEN = new ResourceLocation(VolcanobayAssets.MODID,
             "textures/stealth/unseen.png");
-    private static final ResourceLocation INCREASE = new ResourceLocation(VolcanobayAssets.MODID,
-            "textures/stealth/increase.png");
+    private static final ResourceLocation THREAT_1 = new ResourceLocation(VolcanobayAssets.MODID,
+            "textures/stealth/threat_1.png");
     private static final ResourceLocation DECREASE = new ResourceLocation(VolcanobayAssets.MODID,
             "textures/stealth/decrease.png");
     private static final ResourceLocation HEAL = new ResourceLocation(VolcanobayAssets.MODID,
@@ -46,27 +50,42 @@ public class StealthHudOverlay{
         int x = width;
         int y = height;
         if (ClientStealthData.getPlayerStealth() > 50) {
-            guiGraphics.blit(UNSEEN,x-34,14,0,0,32,32,
+            guiGraphics.blit(UNSEEN,x-34,0,0,0,32,32,
                     32,32);
         } else {
-            guiGraphics.blit(SEEN, x - 34, 14, 0, 0, 32, 32,
+            guiGraphics.blit(SEEN, x - 34, 0, 0, 0, 32, 32,
                     32, 32);
         }
-        if (increase > 0) {
-            increase--;
-            guiGraphics.blit(INCREASE,x-16,34+dir*2,0,0,16,16,16,16);
-        }
-        if (decrease > 0) {
-            decrease--;
-            guiGraphics.blit(DECREASE,x-16,34+dir*2,0,0,16,16,16,16);
+        if (ClientStealthData.getPlayerStealth() < 0) {
+            guiGraphics.blit(THREAT_1, x - 38, 0, 0, 0, 16, 16,
+                    16, 16);
         }
         Player player = Minecraft.getInstance().player;
         Math.floor(player.getVisualRotationYInDegrees()/270);
-        guiGraphics.blit(COMPASS,x-(width/2)-185,13,0,0,364,14,
-                364,14);
-        guiGraphics.drawCenteredString(gui.getFont(),"S", (int) (x-(width/2)+player.getVisualRotationYInDegrees()-180+Math.floor((player.getVisualRotationYInDegrees()-180)/360)*-360)-180,16,0xffffff);
-        guiGraphics.drawCenteredString(gui.getFont(),"W", (int) (x-(width/2)+player.getVisualRotationYInDegrees()-270+Math.floor((player.getVisualRotationYInDegrees()-270)/360)*-360)-180,16,0xffffff);
-        guiGraphics.drawCenteredString(gui.getFont(),"E", (int) (x-(width/2)+player.getVisualRotationYInDegrees()-90+Math.floor((player.getVisualRotationYInDegrees()-90)/360)*-360)-180,16,0xffffff);
-        guiGraphics.drawCenteredString(gui.getFont(),"N", (int) (x-(width/2)+player.getVisualRotationYInDegrees()+Math.floor((player.getVisualRotationYInDegrees())/360)*-360)-180,16,0xffffff);
+        guiGraphics.blit(COMPASS,x-(width/2)-185,7,0,0,380,30,
+                380,30);
+        int north = (int) (x-(width/2)+player.getVisualRotationYInDegrees()+Math.floor((player.getVisualRotationYInDegrees())/360)*-360)-180;
+        int south = (int) (x-(width/2)+player.getVisualRotationYInDegrees()-180+Math.floor((player.getVisualRotationYInDegrees()-180)/360)*-360)-180;
+        int east = (int) (x-(width/2)+player.getVisualRotationYInDegrees()-90+Math.floor((player.getVisualRotationYInDegrees()-90)/360)*-360)-180;
+        int west = (int) (x-(width/2)+player.getVisualRotationYInDegrees()-270+Math.floor((player.getVisualRotationYInDegrees()-270)/360)*-360)-180;
+        guiGraphics.drawCenteredString(gui.getFont(),"S",south,16,getColor(south));
+        guiGraphics.drawCenteredString(gui.getFont(),"W", west,16,getColor(west));
+        guiGraphics.drawCenteredString(gui.getFont(),"E",east,16,getColor(east));
+        guiGraphics.drawCenteredString(gui.getFont(),"N",north,16,getColor(north));
     });
+    public static int getColor(int pos) {
+        return 0xFFFFFF;
+    }
+    protected static int toHex(Color col) {
+        String as = pad(Integer.toHexString(col.getAlpha()));
+        String rs = pad(Integer.toHexString(col.getRed()));
+        String gs = pad(Integer.toHexString(col.getGreen()));
+        String bs = pad(Integer.toHexString(col.getBlue()));
+        String hex = "0x" + as + rs + gs + bs;
+        return Integer.parseInt(hex, 16);
+    }
+
+    private static String pad(String s) {
+        return (s.length() == 1) ? "0" + s : s;
+    }
 }

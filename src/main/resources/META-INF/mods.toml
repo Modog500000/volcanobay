@@ -70,6 +70,6 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="magistuarmory"
 mandatory=true
-versionRange="[8.11,)"
+versionRange="[8.2,)"
 ordering="NONE"
 side="BOTH"

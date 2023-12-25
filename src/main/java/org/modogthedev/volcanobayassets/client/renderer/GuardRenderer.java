@@ -15,6 +15,9 @@ import org.modogthedev.volcanobayassets.core.entities.GuardEntity;
 public class GuardRenderer extends HumanoidMobRenderer<GuardEntity, GuardEntityModel<GuardEntity>> {
     private static final ResourceLocation TEXTURE_1 = new ResourceLocation(VolcanobayAssets.MODID, "textures/entity/guard_1.png");
     private static final ResourceLocation TEXTURE_2 = new ResourceLocation(VolcanobayAssets.MODID, "textures/entity/guard_2.png");
+    private static final ResourceLocation TEXTURE_3 = new ResourceLocation(VolcanobayAssets.MODID, "textures/entity/guard_3.png");
+    private static final ResourceLocation TEXTURE_4 = new ResourceLocation(VolcanobayAssets.MODID, "textures/entity/guard_4.png");
+    private static final ResourceLocation TEXTURE_5 = new ResourceLocation(VolcanobayAssets.MODID, "textures/entity/guard_5.png");
 
     public GuardRenderer(EntityRendererProvider.Context ctx) {
         this(ctx, ModelLayers.SKELETON, ModelLayers.SKELETON_INNER_ARMOR, ModelLayers.SKELETON_OUTER_ARMOR);
@@ -26,7 +29,17 @@ public class GuardRenderer extends HumanoidMobRenderer<GuardEntity, GuardEntityM
 
 
     @Override
-    public ResourceLocation getTextureLocation(GuardEntity p_114482_) {
-        return TEXTURE_2;
+    public ResourceLocation getTextureLocation(GuardEntity me) {
+        if (me.skin == 1) {
+            return TEXTURE_1;
+        } else if (me.skin == 2) {
+            return TEXTURE_2;
+        } else if (me.skin == 3) {
+            return TEXTURE_3;
+        } else if (me.skin == 4) {
+            return TEXTURE_4;
+        } else {
+            return TEXTURE_5;
+        }
     }
 }

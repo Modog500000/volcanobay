@@ -24,14 +24,20 @@ import org.jetbrains.annotations.Nullable;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
 import org.modogthedev.volcanobayassets.core.ModAttributes;
 import org.modogthedev.volcanobayassets.core.event.PlayerTickHandler;
+import org.modogthedev.volcanobayassets.core.networking.ModMessages;
+import org.modogthedev.volcanobayassets.core.networking.packet.StealthSyncDataS2CPacket;
+import org.modogthedev.volcanobayassets.core.util.PlayerStealthProvider;
+import org.modogthedev.volcanobayassets.core.util.StealthData;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GuardEntity extends Monster {
 
     public GuardEntity(EntityType<? extends Monster> p_21368_, Level p_21369_) {
         super(p_21368_, p_21369_);
     }
+    public int skin = (int) Math.floor(Math.random()*5);
 
     @Override
     protected void registerGoals() {
@@ -47,7 +53,7 @@ public class GuardEntity extends Monster {
 
     @Override
     public boolean hurt(DamageSource source, float p_21017_) {
-        newTarget((LivingEntity) source.getEntity(), this);
+        this.setTarget((LivingEntity) source.getEntity());
         warnOthers((LivingEntity) source.getEntity(),10);
         return super.hurt(source, p_21017_);
     }
@@ -76,21 +82,46 @@ public class GuardEntity extends Monster {
                 double d0 = vec31.length();
                 vec31 = vec31.normalize();
                 double d1 = vec3.dot(vec31);
-                boolean seen =d1 > Math.max(0.985,(stealth/50)-1) && this.hasLineOfSight(player);
-                if (seen) {
+                boolean seen =d1 > Math.max(0.985,0.7) && this.hasLineOfSight(player);
+                if (seen && player.gameMode.isSurvival()) {
                     if (player.getMainHandItem().getItem() instanceof SwordItem) {
                         newTarget(player, this);
                         warnOthers(player,5);
                     }
-                    PlayerTickHandler.subStealth(player, 100);
+                    player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
+                       if (stealthData.getStealth() < 0) {
+                           newTarget(player, this);
+                       } else if (stealthData.getStealth() > 0) {
+                           PlayerTickHandler.setStealth(player, 0);
+                       }
+                    });
+                    if (Objects.equals(this.getTarget(), player)) {
+                        PlayerTickHandler.setStealth(player, -5);
+                    }
                 }
             }
         }
         super.tick();
+        List<Monster> extraTargets = this.level().getEntitiesOfClass(Monster.class, this.getBoundingBox().inflate(10));
+        for (Monster monster : extraTargets) {
+            if (!(monster instanceof GuardEntity)) {
+                if (this.hasLineOfSight(monster)) {
+                    this.newTarget(monster, this);
+                }
+            }
+        }
     }
     public void newTarget(LivingEntity target, GuardEntity guard) {
         if (guard.getTarget() == null) {
             guard.setTarget(target);
+            if (target instanceof ServerPlayer stealthTarget) {
+                PlayerTickHandler.setStealth(stealthTarget, -400);
+            }
+        } else if (!guard.hasLineOfSight(guard.getTarget())) {
+            guard.setTarget(target);
+            if (target instanceof ServerPlayer stealthTarget) {
+                PlayerTickHandler.setStealth(stealthTarget, -400);
+            }
         }
     }
     public void warnOthers(LivingEntity target, int radius) {
@@ -102,5 +133,8 @@ public class GuardEntity extends Monster {
         }
     }
 
-
+    @Override
+    protected float getEquipmentDropChance(EquipmentSlot p_21520_) {
+        return 0;
+    }
 }

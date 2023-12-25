@@ -47,9 +47,7 @@ public class PlayerTickHandler {
                     subStealth(player,10);
                 }
             }
-            if(new Random().nextFloat() <= 0.005f) {;
-                addStealth(player,2);
-            }
+            addStealth(player,1);
         }
         if (tickSinceSet > 20) {
             tickSinceSet = 0;
@@ -62,6 +60,12 @@ public class PlayerTickHandler {
         int finalStealth = thisStealth;
         player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
                     stealthData.addStealth(amount*(finalStealth/4));
+            ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
+        });
+    }
+    public static void setStealth(ServerPlayer player, int amount) {
+        player.getCapability(PlayerStealthProvider.PLAYER_STEALTH).ifPresent(stealthData -> {
+            stealthData.setStealth(amount);
             ModMessages.sendToPlayer(new StealthSyncDataS2CPacket(stealthData.getStealth()), player);
         });
     }
