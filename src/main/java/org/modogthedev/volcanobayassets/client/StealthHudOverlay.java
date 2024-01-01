@@ -11,6 +11,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
 
 import java.awt.*;
+import java.math.BigInteger;
 
 public class StealthHudOverlay{
     public static int increase = 0;
@@ -49,6 +50,7 @@ public class StealthHudOverlay{
         int height = guiGraphics.guiHeight();
         int x = width;
         int y = height;
+
         if (ClientStealthData.getPlayerStealth() > 50) {
             guiGraphics.blit(UNSEEN,x-34,0,0,0,32,32,
                     32,32);
@@ -61,20 +63,23 @@ public class StealthHudOverlay{
                     16, 16);
         }
         Player player = Minecraft.getInstance().player;
+        float rot = player.getVisualRotationYInDegrees()*-1;
         Math.floor(player.getVisualRotationYInDegrees()/270);
         guiGraphics.blit(COMPASS,x-(width/2)-185,7,0,0,380,30,
                 380,30);
-        int north = (int) (x-(width/2)+player.getVisualRotationYInDegrees()+Math.floor((player.getVisualRotationYInDegrees())/360)*-360)-180;
-        int south = (int) (x-(width/2)+player.getVisualRotationYInDegrees()-180+Math.floor((player.getVisualRotationYInDegrees()-180)/360)*-360)-180;
-        int east = (int) (x-(width/2)+player.getVisualRotationYInDegrees()-90+Math.floor((player.getVisualRotationYInDegrees()-90)/360)*-360)-180;
-        int west = (int) (x-(width/2)+player.getVisualRotationYInDegrees()-270+Math.floor((player.getVisualRotationYInDegrees()-270)/360)*-360)-180;
-        guiGraphics.drawCenteredString(gui.getFont(),"S",south,16,getColor(south));
-        guiGraphics.drawCenteredString(gui.getFont(),"W", west,16,getColor(west));
-        guiGraphics.drawCenteredString(gui.getFont(),"E",east,16,getColor(east));
-        guiGraphics.drawCenteredString(gui.getFont(),"N",north,16,getColor(north));
+        int north = (int) (x-(width/2)+rot+Math.floor((rot)/360)*-360)-180;
+        int south = (int) (x-(width/2)+rot-180+Math.floor((rot-180)/360)*-360)-180;
+        int east = (int) (x-(width/2)+rot-270+Math.floor((rot-270)/360)*-360)-180;
+        int west = (int) (x-(width/2)+rot-90+Math.floor((rot-90)/360)*-360)-180;
+        guiGraphics.drawCenteredString(gui.getFont(),"S",south+5,16,getColor(south, width));
+        guiGraphics.drawCenteredString(gui.getFont(),"W", west+5,16,getColor(west, width));
+        guiGraphics.drawCenteredString(gui.getFont(),"E",east+5,16,getColor(east, width));
+        guiGraphics.drawCenteredString(gui.getFont(),"N",north+5,16,getColor(north, width));
     });
-    public static int getColor(int pos) {
-        return 0xFFFFFF;
+    public static int getColor(int data, int width) {
+        int pos = data-width/2;
+        final float alpha =Math.max(Math.min((80f/(Math.abs((float)pos)-105))-1,1),0);
+        return toHex(new Color(1.0f, 1f ,1f ,alpha));
     }
     protected static int toHex(Color col) {
         String as = pad(Integer.toHexString(col.getAlpha()));
@@ -82,7 +87,7 @@ public class StealthHudOverlay{
         String gs = pad(Integer.toHexString(col.getGreen()));
         String bs = pad(Integer.toHexString(col.getBlue()));
         String hex = "0x" + as + rs + gs + bs;
-        return Integer.parseInt(hex, 16);
+        return Long.decode(hex).intValue();
     }
 
     private static String pad(String s) {

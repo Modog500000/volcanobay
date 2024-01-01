@@ -8,8 +8,7 @@
     "LivingEntityMixin"
   ],
   "client": [
-    "MusicManagerDisableMixin",
-    "MusicSliderRemoveMixin"
+    "MusicManagerDisableMixin"
   ],
   "injectors": {
     "defaultRequire": 1

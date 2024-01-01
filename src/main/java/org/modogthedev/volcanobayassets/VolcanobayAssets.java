@@ -52,7 +52,6 @@ public class VolcanobayAssets {
     public void setup() {
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(PlayerTickHandler::playerTickHandler);
-        bus.addListener(ClientMusicManager::clientMusicManager);
     }
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
@@ -69,8 +68,10 @@ public class VolcanobayAssets {
     public static class ClientModEvents {
 
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            IEventBus bus = MinecraftForge.EVENT_BUS;
+            bus.addListener(ClientMusicManager::clientMusicManager);
+
         }
     }
 }

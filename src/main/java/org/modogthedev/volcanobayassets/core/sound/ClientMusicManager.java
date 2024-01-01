@@ -1,78 +1,164 @@
 package org.modogthedev.volcanobayassets.core.sound;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
 import org.modogthedev.volcanobayassets.client.ClientStealthData;
+import org.modogthedev.volcanobayassets.core.util.IMusicInstance;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientMusicManager {
     private static final Minecraft minecraft = Minecraft.getInstance();
     @Nullable
-    private static SoundInstance currentMusic;
+    private static IMusicInstance currentMusic;
     private static int delay = 100;
+    private static int timePlaying = 0;
+    private static int waitForNext = 0;
     private static int fade = 0;
     private static int fadeTime = 0;
-    private static float volume = 100;
-    public static String track;
+    private static final float volume = 1f;
+    public static Track track;
 
     public static void clientMusicManager(TickEvent.ClientTickEvent event) { //Tick
-        delay--;
         Player player = minecraft.player;
         if (currentMusic != null) {
-
-        } else { // Check to start playing sound
+            delay--;
+            if (player != null) {
+                if (player.getHealth() <= 0) {
+                    beginFade(20);
+                }
+                if (track == Track.MENU) {
+                    delay = 0;
+                }
+            }
             if (ClientStealthData.getPlayerStealth() < 0) {
-                stopPlaying();
-                playSound(ModSounds.MUSIC_INVOCATION.get());
-                track = "battle";
+                timePlaying++;
+                delay = 200;
+                if (timePlaying > 2000) {
+                    delay = 0;
+                }
+                if (track != Track.BATTLE) {
+                    delay = 0;
+                    beginFade(40);
+                }
+            }
+        } else { // Check to start playing sound
+            if (minecraft.screen instanceof TitleScreen) {
+                if (waitForNext <= 0) {
+                        stopPlaying();
+                        playSound(getSoundEvent(Track.MENU));
+                        track = Track.MENU;
+                        delay = (int) ((Math.random() + 1) * 2000);
+                } else {
+                    waitForNext--;
+                }
+            } else {
+                if (waitForNext <= 0) {
+                    if (ClientStealthData.getPlayerStealth() < 0) {
+                        stopPlaying();
+                        playSound(getSoundEvent(Track.BATTLE));
+                        track = Track.BATTLE;
+                        delay = (int) ((Math.random() + .5) * 1500);
+                    }
+                    if (Math.floor(Math.random()*200)==0) {
+                        stopPlaying();
+                        playSound(getSoundEvent(Track.EXPLORE));
+                        track = Track.EXPLORE;
+                        delay = (int) ((Math.random() + 1) * 2000);
+                    }
+                } else {
+                    waitForNext--;
+                }
             }
         }
         if (delay <= 0 && currentMusic != null && fade == 0) {
-            beginFade(400);
+            beginFade(100);
             delay = 0;
         }
         if (fade > 0 ) {
-            fadeOff(fade);
+            fadeOff();
         }
     }
-    public static void playSound(SoundEvent sound) {
-        currentMusic = SimpleSoundInstance.forMusic(sound);
-        minecraft.getSoundManager().play(currentMusic);
-        delay = 400;
-        VolcanobayAssets.LOGGER.info("Start playing!");
+    public static SoundEvent getSoundEvent(Track track) {
+        switch (track) {
+            case BATTLE -> { // Battle Tracks
+                final int random = (int) Math.ceil(Math.random()*2);
+                switch (random) {
+                    case 1 -> {
+                        return ModSounds.MUSIC_BATTLE_01.get();
+                    }
+                    case 2 -> {
+                        return ModSounds.MUSIC_BATTLE_02.get();
+                    }
+                }
+            }
+            case EXPLORE -> { //Explore Tracks
+                final int random = (int) Math.ceil(Math.random()*2);
+                switch (random) {
+                    case 1 -> {
+                        return ModSounds.MUSIC_EXPLORE_01.get();
+                    }
+                    case 2 -> {
+                        return ModSounds.MUSIC_EXPLORE_02.get();
+                    }
+                }
+            }
+            case MENU -> { //Explore Tracks
+                final int random = (int) Math.ceil(Math.random()*1);
+                switch (random) {
+                    case 1 -> {
+                        return ModSounds.MUSIC_EXPLORE_02.get();
+                    }
+                }
+            }
+        }
+        return ModSounds.MUSIC_EXPLORE_01.get();
     }
-    public static void fadeOff(int tick) {
-        float newVolume = volume*((float) tick /fadeTime);
-        VolcanobayAssets.LOGGER.info(String.valueOf(newVolume));
-        minecraft.getSoundManager().updateSourceVolume(SoundSource.MUSIC, newVolume);
+    public static void playSound(SoundEvent sound) {
+        timePlaying = 0;
+        currentMusic = SimpleMusicInstance.forMusic(sound);
+        minecraft.getSoundManager().play(currentMusic);
+    }
+    public static void fadeOff() {
+        setVolume(fade);
         fade--;
         if (fade == 0) {
             stopPlaying();
         }
     }
     public static void beginFade(int ticksToFade) {
-        fade = ticksToFade;
-        fadeTime = ticksToFade;
-        VolcanobayAssets.LOGGER.info("Begin fade!");
+        if (fade <= 0) {
+            fade = ticksToFade;
+            fadeTime = ticksToFade;
+        }
     }
     public static void stopPlaying() {
         if (currentMusic != null) {
             minecraft.getSoundManager().stop(currentMusic);
             currentMusic = null;
-            track = "none";
-            VolcanobayAssets.LOGGER.info("Stop playing!");
+            track = Track.NONE;
+            waitForNext = 100;
         }
+    }
+    public static void setVolume(float data) {
+        if (currentMusic != null) {
+        float newVolume = volume*((float) Math.max(fade, 1) /(float)Math.max(fadeTime, 1));
+        currentMusic.setVolume(newVolume);
+        }
+    }
+    public enum Track {
+        BATTLE,
+        EXPLORE,
+        MENU,
+        NONE
     }
 }

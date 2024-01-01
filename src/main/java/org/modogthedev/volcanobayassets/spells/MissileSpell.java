@@ -26,7 +26,7 @@ public class MissileSpell {
         }
         if (me.markForRemoval < 0) {
             for (SpellEntity entity : SpellEntity.getListofSpellsInRange(2, pos, me)) {
-                if (entity != me) {
+                if (entity != me && entity.owner != owner) {
                     if (entity.type == 3) {
                         SpellEntity.newBasic(entity.position(),me.level(),entity,1);
                         entity.markForRemoval = 5;
@@ -37,7 +37,7 @@ public class MissileSpell {
             }
             for (LivingEntity entity : SpellEntity.getListofEntitesInRange(2, pos, me)) {
                 if (entity != owner) {
-                    entity.hurt(owner.damageSources().magic(), 3+(me.power*4));
+                    entity.hurt(owner.damageSources().magic(), 2+(me.power*8));
 
                     SpellEntity.newBasic(entity.position(),me.level(),entity,1);
                     me.markForRemoval = 1;

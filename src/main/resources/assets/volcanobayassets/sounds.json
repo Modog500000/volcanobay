@@ -1,8 +1,26 @@
 {
-  "music_invocation": {
-    "subtitles": "sounds.volcanobayassets.music_invocation",
+  "music_explore_01": {
+    "subtitles": "sounds.volcanobayassets.music_explore_01",
     "sounds": [
-      "volcanobayassets:music_invocation"
+      "volcanobayassets:music_explore_01"
+    ]
+  },
+  "music_explore_02": {
+    "subtitles": "sounds.volcanobayassets.music_explore_02",
+    "sounds": [
+      "volcanobayassets:music_explore_02"
+    ]
+  },
+  "music_battle_01": {
+    "subtitles": "sounds.volcanobayassets.music_battle_01",
+    "sounds": [
+      "volcanobayassets:music_battle_01"
+    ]
+  },
+  "music_battle_02": {
+    "subtitles": "sounds.volcanobayassets.music_battle_02",
+    "sounds": [
+      "volcanobayassets:music_battle_02"
     ]
   }
 }

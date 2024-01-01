@@ -106,12 +106,12 @@ public class GuardEntity extends Monster {
         for (Monster monster : extraTargets) {
             if (!(monster instanceof GuardEntity)) {
                 if (this.hasLineOfSight(monster)) {
-                    this.newTarget(monster, this);
+                    newTarget(monster, this);
                 }
             }
         }
     }
-    public void newTarget(LivingEntity target, GuardEntity guard) {
+    public static void newTarget(LivingEntity target, GuardEntity guard) {
         if (guard.getTarget() == null) {
             guard.setTarget(target);
             if (target instanceof ServerPlayer stealthTarget) {
@@ -128,6 +128,15 @@ public class GuardEntity extends Monster {
         List<GuardEntity> getGuards = this.level().getEntitiesOfClass(GuardEntity.class, this.getBoundingBox().inflate(radius));
         for (GuardEntity guard : getGuards) {
             if (guard.hasLineOfSight(this)) {
+                newTarget(target, guard);
+            }
+        }
+    }
+
+    public static void playerWarnOthers(LivingEntity player, LivingEntity target, int radius) {
+        List<GuardEntity> getGuards = player.level().getEntitiesOfClass(GuardEntity.class, player.getBoundingBox().inflate(radius));
+        for (GuardEntity guard : getGuards) {
+            if (guard.hasLineOfSight(player)) {
                 newTarget(target, guard);
             }
         }

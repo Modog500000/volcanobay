@@ -8,6 +8,8 @@
   "item.volcanobayassets.scroll_heal" : "Heal Spell Scroll",
   "item.volcanobayassets.scroll_strengthen" : "Strengthen Spell Scroll",
 
+  "block.volcanobayassets.action_block" : "Action Block",
+
   "item.volcanobayassets.guard_spawn_egg" : "Guard Spawn Egg",
   "entity.volcanobayassets.guard" : "Guard",
   "volcanobayassets.attribute.magic_damage.name" : "Magic Damage",

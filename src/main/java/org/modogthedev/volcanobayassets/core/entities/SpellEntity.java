@@ -1,6 +1,7 @@
 package org.modogthedev.volcanobayassets.core.entities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -12,9 +13,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
 import org.modogthedev.volcanobayassets.VolcanobayAssets;
 import org.modogthedev.volcanobayassets.core.ModEntities;
 import org.modogthedev.volcanobayassets.spells.*;
@@ -104,6 +109,7 @@ public class SpellEntity extends Entity {
                 if (restorableLifetime > 60) {
                     this.kill();
                 }
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.95));
             }
             case 4 -> {
                 StrengthenSpell.tick(initialise,this);
@@ -176,9 +182,27 @@ public class SpellEntity extends Entity {
         if (impact) {
             this.setPos(this.position().add(this.getDeltaMovement()));
         } else {
-            this.move(MoverType.SELF, this.getDeltaMovement());
+            if (projectile) {
+                BlockHitResult hit = this.level().clip(new ClipContext(this.position(), this.position().add(this.getDeltaMovement()), ClipContext.Block.COLLIDER, ClipContext.Fluid.WATER, this));
+                if (hit.getType() != HitResult.Type.MISS) {
+                    Direction.Axis a = hit.getDirection().getAxis();
+                    Vec3 m = this.getDeltaMovement();
+                    this.setDeltaMovement(new Vec3(m.x * (a == Direction.Axis.X ? -1 : 1), m.y() * (a == Direction.Axis.Y ? -1 : 1), m.z() * (a == Direction.Axis.Z ? -1 : 1)).scale(0.7f));
+
+                    Vec3 vector3d = hit.getLocation().subtract(this.position());
+                    VolcanobayAssets.LOGGER.info(String.valueOf(vector3d));
+                    this.setDeltaMovement(this.getDeltaMovement().add(vector3d));
+                }
+                this.setPos(this.position().add(this.getDeltaMovement()));
+            } else {
+                this.move(MoverType.SELF, this.getDeltaMovement());
+            }
         }
         this.setDeltaMovement(this.getDeltaMovement().scale(0.999));
+    }
+    private Vec3 getBouncingVelocityMultiplier(float factor)
+    {
+        return new Vec3(factor, factor, factor);
     }
 
     @Override
